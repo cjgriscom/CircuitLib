@@ -4,50 +4,31 @@ import os
 import sys
 import importlib
 from Tkinter import *
+import ttk
 import tkFont
 
 class CircuitLib(Frame):
-   def mouseDown(self, event):
-       self.lastX = event.x
-       self.lastY = event.y
-
-   def mouseMove(self, event):
-       self.draw.move(CURRENT, event.x - self.lastX, event.y - self.lastY)
-       self.lastX = event.x
-       self.lastY = event.y
-        
-   def mouseEnter(self, event):
-       self.draw.itemconfig(CURRENT, fill="red")
-
-
-   def mouseLeave(self, event):
-       self.draw.itemconfig(CURRENT, fill="blue")
 
    def createWidgets(self):
-       times24 = tkFont.Font(family="times", size="24")
-       times36 = tkFont.Font(family="times", size="36")
-       self.draw = Canvas(self, width="300", height="200")
-       self.draw.grid(row=0)
-       self.draw.create_rectangle(1,1,300,200)
-
-       self.QUIT = Button(self, text="Quit", foreground="red", bd=10,
-                          font=times24, command=self.quit)
-       self.QUIT.grid(row=1, sticky=N+S+E+W)
+       self.buttonFrame = Frame()
+       self.buttonFrame.grid(row=0, column=1)
 
        fred = self.draw.create_oval(0,0,20,20,fill="green",tags="selected")
-
-       self.draw.tag_bind(fred, "<Any-Enter>", self.mouseEnter)
-       self.draw.tag_bind(fred, "<Any-Leave>", self.mouseLeave)
-
-       Widget.bind(self.draw, "<1>", self.mouseDown)
-       Widget.bind(self.draw, "<B1-Motion>", self.mouseMove)
        
-
+       self.notebook = ttk.Notebook()
+       self.notebook.grid(row=0,column=0)
+       master_foo = Frame(self.notebook, name='master-foo')
+       Label(master_foo, text="this is foo").pack(side=LEFT)
+       # Button to quit app on right
+       btn = Button(master_foo, text="foo", command=self.quit)
+       btn.pack(side=RIGHT)
+       self.notebook.add(master_foo, text="foo") # add tab to Notebook
 
    def __init__(self):
        Frame.__init__(self)
        self.MODULES_DIR = 'modules'
        self.loadModules()
+       self.grid()
        self.createWidgets()
 
    def loadModules(self):
@@ -66,5 +47,5 @@ class CircuitLib(Frame):
        return mod
     
 cl = CircuitLib()
-cl.mainLoop()
+cl.mainloop()
 
