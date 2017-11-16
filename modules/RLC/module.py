@@ -8,7 +8,7 @@ class Module:
     #def __init__(self):
 
     def moduleName(self):
-        return '5552'
+        return 'RLC'
 
     def moduleVersion(self):
         return '0.0.1'
@@ -17,10 +17,10 @@ class Module:
         return True
 
     def genTab(self, cl, nbook):
-        tab555 = Frame(nbook, name='5552')
-        Label(tab555, text="5552").pack(side=LEFT)
+        tab555 = Frame(nbook)
+        Label(tab555, text=self.moduleName()).pack(side=LEFT)
 
-        btn = Button(tab555, text="Button5552", command=cl.quit)
+        btn = Button(tab555, text="Placeholder", command=cl.quit)
         btn.pack(side=RIGHT)
-        nbook.add(tab555, text="Tab5552") # add tab to Notebook
+        nbook.add(tab555, text=self.moduleName()) # add tab to Notebook
 
