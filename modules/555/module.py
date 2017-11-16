@@ -71,7 +71,22 @@ class Module:
         ERR = 0
         if hasHZ | hasDC | hasR1 | hasR2 | hasC1 >= 0: # Not negative
             if hasHZ + hasDC + hasR1 + hasR2 + hasC1 == 3:
-                if   (hasDC == 0 and hasHZ == 0): DC, HZ, ERR = self.solve_DC_HZ(R1, R2, C1)
+                if (DC < 0 or HZ < 0 or R1 < 0 or R2 < 0 or C1 < 0):
+                    ERR = -1
+                    tkMessageBox.showinfo("Error", "All values must be positive")
+                elif (hasDC == 1 and DC < 50):
+                    ERR = -1
+                    tkMessageBox.showinfo("Error", "The duty cycle must be >= 50")
+                elif (hasDC == 1 and DC > 99):
+                    ERR = -1
+                    tkMessageBox.showinfo("Error", "The duty cycle must be <= 99")
+                elif (hasDC == 1 and hasR1 == 1 and (DC == 50) != (R1 == 0)):
+                    ERR = -1
+                    if R1 == 0:
+                        tkMessageBox.showinfo("Error", "The duty cycle must be 50 when R1 equals 0")
+                    else:
+                        tkMessageBox.showinfo("Error", "R1 must be 0 when the duty cycle equals 50")
+                elif (hasDC == 0 and hasHZ == 0): DC, HZ, ERR = self.solve_DC_HZ(R1, R2, C1)
                 elif (hasDC == 0 and hasR1 == 0): DC, R1, ERR = self.solve_DC_R1(HZ, R2, C1)
                 elif (hasDC == 0 and hasR2 == 0): DC, R2, ERR = self.solve_DC_R2(R1, HZ, C1)
                 elif (hasDC == 0 and hasC1 == 0): DC, C1, ERR = self.solve_DC_C1(R1, R2, HZ)
@@ -104,7 +119,7 @@ class Module:
     
     def solve_DC_R2(self, R1,HZ,C1): #Complete
         DC=50.+(625.*C1*HZ*R1)/(18.)
-        R2=(DC-100.)*R1/(2*(50.-DC))
+        R2=((1.44/HZ/C1)-R1)/2.
         return DC, R2, 0
     
     def solve_DC_C1(self, R1,R2,HZ): #Complete
@@ -118,9 +133,13 @@ class Module:
         return HZ, R1, 0
     
     def solve_HZ_R2(self, R1,DC,C1): #Complete
-        R2=(DC-100.)*R1/(2*(50.-DC))
-        HZ=1.44/((R1+2*R2)*C1)
-        return HZ, R2, 0
+        if R1 == 0:
+            tkMessageBox.showinfo("Error", "With a 50% duty cycle, R2 and HZ are dependent")
+            return HZ, R2, 0
+        else:
+            R2=(DC-100.)*R1/(2*(50.-DC))
+            HZ=1.44/((R1+2*R2)*C1)
+            return HZ, R2, 0
     
     def solve_HZ_C1(self, R1,R2,DC): # Unsolvable case
         tkMessageBox.showinfo("Error", "C1 depends on frequency; one or the other must be set.")
@@ -132,9 +151,13 @@ class Module:
         return C1, R1, 0
     
     def solve_C1_R2(self, R1,DC,HZ): #Complete
-        R2=(DC-100.)*R1/(2*(50.-DC))
-        C1=1.44/(HZ*(R1+2*R2))
-        return C1, R2, 0
+        if R1 == 0:
+            tkMessageBox.showinfo("Error", "With a 50% duty cycle, C1 and R2 are dependent")
+            return HZ, R2, 0
+        else:
+            R2=(DC-100.)*R1/(2*(50.-DC))
+            C1=1.44/(HZ*(R1+2*R2))
+            return C1, R2, 0
     
     def solve_R1_R2(self, DC,HZ,C1): #Complete
         R2=9.*(100-DC)/(625.*C1*HZ)
