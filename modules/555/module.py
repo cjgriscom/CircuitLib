@@ -142,7 +142,7 @@ class Module:
     
     def solve_HZ_R2(self, R1,DC,C1): #Complete
         if R1 == 0:
-            tkMessageBox.showinfo("Error", "With a 50% duty cycle, R2 and HZ are dependent")
+            tkMessageBox.showinfo("Error", "With a 50% duty cycle, R2 and HZ are dependent; one or the other must be set.")
             return 0, 0, -1
         else:
             R2=(DC-100.)*R1/(2*(50.-DC))
@@ -160,7 +160,7 @@ class Module:
     
     def solve_C1_R2(self, R1,DC,HZ): #Complete
         if R1 == 0:
-            tkMessageBox.showinfo("Error", "With a 50% duty cycle, C1 and R2 are dependent")
+            tkMessageBox.showinfo("Error", "With a 50% duty cycle, C1 and R2 are dependent; one or the other must be set.")
             return 0, 0, -1
         else:
             R2=(DC-100.)*R1/(2*(50.-DC))
