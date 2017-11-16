@@ -99,7 +99,6 @@ class Module:
                 elif (hasC1 == 0 and hasR2 == 0): C1, R2, ERR = self.solve_C1_R2(R1, DC, HZ)
                 elif (hasR1 == 0 and hasR2 == 0): R1, R2, ERR = self.solve_R1_R2(DC, HZ, C1)
                 elif (hasDC == 0): DC = 100*(R1 + R2)/(R1 + 2.*R2)
-                elif (hasC1 == 0): C1 = 1.44/(HZ*(R1+2.*R2))
                 elif (hasHZ == 0): HZ = 1.44/(C1*(R1+2.*R2))
                 else:
                     tkMessageBox.showinfo("Error", "The system is overconstrained. Remove a value and try again.")
