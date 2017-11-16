@@ -6,18 +6,34 @@ import importlib
 from Tkinter import *
 import ttk
 import tkFont
+from PIL import ImageTk, Image
 
 class CircuitLib(ttk.Frame):
+    BUTTONCOL = 0
+  
     @classmethod
     def main(clazz):
         #NoDefaultRoot()
         root = Tk()
+        root.title("CircuitLib")
         app = clazz(root)
         app.grid(sticky=NSEW)
         root.grid_columnconfigure(0, weight=1)
         root.grid_rowconfigure(0, weight=1)
         root.resizable(True, True) # Row, Col
         root.mainloop()
+    
+    def util_getModuleDir(self, doubleUnderscoreFile):
+        return os.path.dirname(os.path.realpath(doubleUnderscoreFile))
+        
+    def util_getImageLabel(self, root, doubleUnderscoreFile, imageRelPath):
+        img = Image.open(os.path.join(self.util_getModuleDir(doubleUnderscoreFile), imageRelPath))
+        photoImg = ImageTk.PhotoImage(img)
+        
+        imgLabel = Label(root)
+        imgLabel.image = photoImg
+        imgLabel.configure(image=photoImg)
+        return imgLabel
   
     def packButton(self, buttonFrame, txt, cmd):
         
@@ -39,8 +55,7 @@ class CircuitLib(ttk.Frame):
         print "TODO"
  
     def createWidgets(self):
-        self.BUTTONCOL = 0
-        buttonFrame = ttk.Frame()
+        buttonFrame = Frame()
         buttonFrame.grid(row=0, column=1,sticky="SEW")
         
  
