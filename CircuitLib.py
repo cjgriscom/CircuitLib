@@ -7,7 +7,18 @@ from Tkinter import *
 import ttk
 import tkFont
 
-class CircuitLib(Frame):
+class CircuitLib(ttk.Frame):
+    @classmethod
+    def main(clazz):
+        #NoDefaultRoot()
+        root = Tk()
+        app = clazz(root)
+        app.grid(sticky=NSEW)
+        root.grid_columnconfigure(0, weight=1)
+        root.grid_rowconfigure(0, weight=1)
+        root.resizable(True, True) # Row, Col
+        root.mainloop()
+  
     def packButton(self, buttonFrame, txt, cmd):
         
         btn = Button(buttonFrame, text=txt, command=cmd)
@@ -29,8 +40,8 @@ class CircuitLib(Frame):
  
     def createWidgets(self):
         self.BUTTONCOL = 0
-        buttonFrame = Frame()
-        buttonFrame.grid(row=0, column=1,sticky=NSEW)
+        buttonFrame = ttk.Frame()
+        buttonFrame.grid(row=0, column=1,sticky="SEW")
         
  
         self.exitBtn = self.packButton(buttonFrame, "Instructions", self.instructions)
@@ -41,9 +52,11 @@ class CircuitLib(Frame):
  
         self.notebook = ttk.Notebook()
         self.notebook.grid(row=0,column=0,sticky=NSEW)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
  
-    def __init__(self):
-        Frame.__init__(self)
+    def __init__(self, root):
+        ttk.Frame.__init__(self, root)
         self.MODULES_DIR = 'modules'
         self.grid(sticky=NSEW)
         self.createWidgets()
@@ -65,7 +78,7 @@ class CircuitLib(Frame):
         if mod.hasTab():
             mod.genTab(self, self.notebook)
         return mod
-    
-cl = CircuitLib()
-cl.mainloop()
 
+if __name__ == '__main__':
+    CircuitLib.main()
+print "Program Exited"
