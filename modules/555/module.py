@@ -70,7 +70,9 @@ class Module:
         C1, hasC1 = self.getValue(self.C1, "C1")
         ERR = 0
         if hasHZ | hasDC | hasR1 | hasR2 | hasC1 >= 0: # Not negative
-            if hasHZ + hasDC + hasR1 + hasR2 + hasC1 == 3:
+            numEntered = hasHZ + hasDC + hasR1 + hasR2 + hasC1
+            if numEntered == 3 or numEntered == 4:
+                ERR = 0
                 if (DC < 0 or HZ < 0 or R1 < 0 or R2 < 0 or C1 < 0):
                     ERR = -1
                     tkMessageBox.showinfo("Error", "All values must be positive")
@@ -96,6 +98,12 @@ class Module:
                 elif (hasC1 == 0 and hasR1 == 0): C1, R1, ERR = self.solve_C1_R1(DC, R2, HZ)
                 elif (hasC1 == 0 and hasR2 == 0): C1, R2, ERR = self.solve_C1_R2(R1, DC, HZ)
                 elif (hasR1 == 0 and hasR2 == 0): R1, R2, ERR = self.solve_R1_R2(DC, HZ, C1)
+                elif (hasDC == 0): DC = 100*(R1 + R2)/(R1 + 2.*R2)
+                elif (hasC1 == 0): C1 = 1.44/(HZ*(R1+2.*R2))
+                elif (hasHZ == 0): HZ = 1.44/(C1*(R1+2.*R2))
+                else:
+                    tkMessageBox.showinfo("Error", "The system is overconstrained. Remove a value and try again.")
+                    ERR = -1
                 
                 if ERR == 0:
                     self.setValue(self.DC,DC)
@@ -104,7 +112,7 @@ class Module:
                     self.setValue(self.R2,R2)
                     self.setValue(self.C1,C1)
             else:
-                tkMessageBox.showinfo("Error", "Please enter 3 values at a time")
+                tkMessageBox.showinfo("Error", "Please enter 3 or 4 values at a time")
         
     
     def solve_DC_HZ(self, R1,R2,C1): #Complete
