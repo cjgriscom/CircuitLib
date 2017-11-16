@@ -72,7 +72,7 @@ class CircuitLib(ttk.Frame):
  
     def __init__(self, root):
         ttk.Frame.__init__(self, root)
-        self.MODULES_DIR = 'modules'
+        self.MODULES_DIR = os.path.join(self.util_getModuleDir(__file__),'modules')
         self.grid(sticky=NSEW)
         self.createWidgets()
         self.loadModules()
