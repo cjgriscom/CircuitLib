@@ -46,6 +46,13 @@ class Module:
         self.BUTTONCOL += 1
         return btn
     
+    def clear(self):
+        self.setValue(self.HZ, "")
+        self.setValue(self.DC, "")
+        self.setValue(self.R1, "")
+        self.setValue(self.R2, "")
+        self.setValue(self.C1, "")
+    
     def setValue(self, entry, value):
         entry.delete(0, END) #deletes the current value
         entry.insert(0, str(value)) #inserts new value assigned by 2nd parameter
@@ -185,7 +192,7 @@ class Module:
         buttonFrame = Frame(tab555)
         buttonFrame.pack(side=RIGHT)
         
-        self.packLabel(buttonFrame, "Fill in 3 out of 5\nvalues and the rest\nwill be calculated.")
+        self.packLabel(buttonFrame, "Fill in 3 or 4 out of 5\nvalues and the rest\nwill be calculated.")
         self.packSpacer(buttonFrame)
         
         self.packLabel(buttonFrame, "Frequency (Hz)")
@@ -204,6 +211,8 @@ class Module:
         self.C1 = self.packField(buttonFrame)
         self.packSpacer(buttonFrame)
         self.packButton(buttonFrame, "Calculate", self.calculate)
+        self.packSpacer(buttonFrame)
+        self.packButton(buttonFrame, "Clear", self.clear)
  
         
         nbook.add(tab555, text=self.moduleName()) # add tab to Notebook
